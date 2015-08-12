@@ -1,0 +1,3 @@
+#!/bin/bash
+BIN_PATH="`dirname \"$0\"`"
+$BIN_PATH/../spec/dummy/bin/rails $@

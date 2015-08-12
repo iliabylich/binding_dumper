@@ -1,0 +1,4 @@
+#!/bin/bash
+BIN_PATH="`dirname \"$0\"`"
+DUMMY_PATH=$BIN_PATH/../spec/dummy
+$DUMMY_PATH/bin/rake -f $DUMMY_PATH/Rakefile $@
