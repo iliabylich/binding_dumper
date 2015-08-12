@@ -4,14 +4,14 @@ require 'pry'
 
 class A
   def initialize
-    @a = 1
+    @a = "IVAR A"
   end
 
   def run
-    local = 1
+    local = "LOCAL"
     binding.dump { |dumped| $b = dumped }
   end
 end
 
 A.new.run
-binding.pry
+Binding.load($b).pry

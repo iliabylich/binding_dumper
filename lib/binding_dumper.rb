@@ -83,8 +83,12 @@ module BindingDumper
         context: context,
         method: eval('__method__'),
         file: eval('__FILE__'),
-        line: eval('__LINE__')
+        line: eval('__LINE__'),
+        lvars: {}
       }
+      local_variables.each do |lvar_name|
+        data_to_dump[:lvars][lvar_name] = local_variable_get(lvar_name)
+      end
       dumped = UniversalDumper.dump(data_to_dump)
       block.call(dumped)
     end
@@ -97,6 +101,11 @@ module BindingDumper
 
         context.singleton_class.send(:define_method, :_local_binding) do
           result = binding
+
+          undumped[:lvars].each do |lvar_name, lvar|
+            result.local_variable_set(lvar_name, lvar)
+          end
+
           m = Module.new do
             define_method(:_file) { undumped[:file] }
             define_method(:_line) { undumped[:line] }
@@ -118,7 +127,7 @@ module BindingDumper
           result
         end
 
-        context
+        context._local_binding
       end
     end
   end

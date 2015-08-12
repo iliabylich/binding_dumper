@@ -1,10 +1,9 @@
 class UsersController < ApplicationController
   def index
-    @users = User.all
+    @users = User.all.to_a
     some_proc = proc { 1 + 1 }
     binding.dump do |data|
-      binding.pry
-      StoredBinding.create(data: data)
+      StoredBinding.create(data: data.force_encoding('utf-8'))
     end
     render json: @users
   end
