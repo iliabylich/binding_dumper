@@ -1,6 +1,14 @@
 class BindingDumper::Dumpers::ProcDumper < BindingDumper::Dumpers::Abstract
   alias_method :_proc, :abstract_object
 
+  def can_convert?
+    _proc.is_a?(Proc) || _proc.is_a?(Method)
+  end
+
+  def can_deconvert?
+    abstract_object.is_a?(Hash) && abstract_object.has_key?(:_source)
+  end
+
   def convert
     return unless should_convert?
 

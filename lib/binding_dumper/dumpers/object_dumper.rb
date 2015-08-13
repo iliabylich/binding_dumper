@@ -1,6 +1,15 @@
 class BindingDumper::Dumpers::ObjectDumper < BindingDumper::Dumpers::Abstract
   alias_method :object, :abstract_object
 
+  def can_convert?
+    true
+  end
+
+  def can_deconvert?
+    abstract_object.is_a?(Hash) &&
+      (abstract_object.has_key?(:_klass) || abstract_object.has_key?(:_object))
+  end
+
   def convert
     return unless should_convert?
     new_dumped_ids = dumped_ids + [object.object_id]

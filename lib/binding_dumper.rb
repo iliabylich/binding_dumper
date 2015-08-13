@@ -9,38 +9,45 @@ module BindingDumper
     autoload :ObjectDumper, 'binding_dumper/dumpers/object_dumper'
     autoload :ClassDumper, 'binding_dumper/dumpers/class_dumper'
     autoload :ProcDumper, 'binding_dumper/dumpers/proc_dumper'
+    autoload :MagicDumper, 'binding_dumper/dumpers/magic_dumper'
   end
+
+  autoload :MagicObjects, 'binding_dumper/magic_objects'
 end
 
 
 
 module UniversalDumper
-  DUMPERS = {
-    Array      => BindingDumper::Dumpers::ArrayDumper,
-    Hash       => BindingDumper::Dumpers::HashDumper,
-    Proc       => BindingDumper::Dumpers::ProcDumper,
-    Method     => BindingDumper::Dumpers::ProcDumper,
-    Class      => BindingDumper::Dumpers::ClassDumper,
-    Numeric    => BindingDumper::Dumpers::PrimitiveDumper,
-    String     => BindingDumper::Dumpers::PrimitiveDumper,
-    NilClass   => BindingDumper::Dumpers::PrimitiveDumper,
-    FalseClass => BindingDumper::Dumpers::PrimitiveDumper,
-    TrueClass  => BindingDumper::Dumpers::PrimitiveDumper,
-    Symbol     => BindingDumper::Dumpers::PrimitiveDumper
-  }
-  DEFAULT_DUMPER = BindingDumper::Dumpers::ObjectDumper
+  DUMPERS_ON_CONVERTING = [
+    BindingDumper::Dumpers::MagicDumper,
+    BindingDumper::Dumpers::ProcDumper,
+    BindingDumper::Dumpers::ClassDumper,
+    BindingDumper::Dumpers::ArrayDumper,
+    BindingDumper::Dumpers::HashDumper,
+    BindingDumper::Dumpers::PrimitiveDumper,
+    BindingDumper::Dumpers::ObjectDumper
+  ]
+
+  DUMPERS_ON_DECONVERTING = [
+    BindingDumper::Dumpers::MagicDumper,
+    BindingDumper::Dumpers::ProcDumper,
+    BindingDumper::Dumpers::ArrayDumper,
+    BindingDumper::Dumpers::ClassDumper,
+    BindingDumper::Dumpers::ObjectDumper,
+    BindingDumper::Dumpers::HashDumper,
+    BindingDumper::Dumpers::PrimitiveDumper
+  ]
 
   extend self
 
-  def dumper_for(object)
-    dumper = DUMPERS.detect do |klass, dumper_klass|
-      object.is_a?(klass)
+  def converter_for(object)
+    DUMPERS_ON_CONVERTING.detect do |dumper_klass|
+      dumper_klass.new(object).can_convert?
     end
-    dumper ? dumper.last : DEFAULT_DUMPER
   end
 
   def convert(object, dumped_ids: [])
-    dumper_for(object).new(object, dumped_ids: dumped_ids).convert
+    converter_for(object).new(object, dumped_ids: dumped_ids).convert
   end
 
   def dump(object)
@@ -48,19 +55,9 @@ module UniversalDumper
     Marshal.dump(converted)
   end
 
-  def deconverter_for(data)
-    if data.is_a?(Hash) && data.has_key?(:_source)
-      BindingDumper::Dumpers::ProcDumper
-    elsif data.is_a?(Hash) && (data.has_key?(:_cvars) || data.has_key?(:_anonymous))
-      BindingDumper::Dumpers::ClassDumper
-    elsif data.is_a?(Hash) && (data.has_key?(:_klass) || data.has_key?(:_object))
-      BindingDumper::Dumpers::ObjectDumper
-    elsif data.is_a?(Hash)
-      BindingDumper::Dumpers::HashDumper
-    elsif data.is_a?(Array)
-      BindingDumper::Dumpers::ArrayDumper
-    else
-      BindingDumper::Dumpers::PrimitiveDumper
+  def deconverter_for(object)
+    DUMPERS_ON_DECONVERTING.detect do |dumper_klass|
+      dumper_klass.new(object).can_deconvert?
     end
   end
 
