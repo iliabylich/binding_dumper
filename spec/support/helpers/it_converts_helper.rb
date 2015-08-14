@@ -1,13 +1,21 @@
 module ItConvertsHelper
-  def it_converts(from, to = from)
+  def it_converts(from, to = from, &block)
     it "converts using #{described_class}.convert #{from} to #{to}" do
       converted = described_class.new(from).convert
-      expect(converted).to eq(to)
+      if block
+        instance_exec(converted, &block)
+      else
+        expect(converted).to eq(to)
+      end
     end
 
     it "converts using UniversalDumper.convert #{from} to #{to}" do
       converted = BindingDumper::UniversalDumper.convert(from)
-      expect(converted).to eq(to)
+      if block
+        instance_exec(converted, &block)
+      else
+        expect(converted).to eq(to)
+      end
     end
 
     it "generates marshalable result for #{from}" do

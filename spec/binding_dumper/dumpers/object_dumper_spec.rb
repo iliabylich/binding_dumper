@@ -5,7 +5,7 @@ describe BindingDumper::Dumpers::ObjectDumper do
   struct = MyStruct.new(123)
 
   class CustomStruct
-    attr_reader :value1, :value2
+    attr_accessor :value1, :value2
 
     def initialize(value1, value2)
       @value1 = value1
@@ -13,13 +13,27 @@ describe BindingDumper::Dumpers::ObjectDumper do
     end
 
     def to_s
-      "#<CustomStruct @value1=#{@value} @value2=#{@value2}>"
+      "#<CustomStruct @value1=#{value1} @value2=#{value2}>"
+    end
+  end
+
+  class CustomRecursiveStruct < CustomStruct
+    def to_s
+      "#<CustomRecursiveStruct ...>"
     end
   end
 
   undumpable_object = StringIO.new
   dumpable_object = CustomStruct.new(123, 456)
   partially_dumpable_object = CustomStruct.new(123, StringIO.new)
+
+  dumpable_recursive_object = CustomRecursiveStruct.allocate
+  dumpable_recursive_object.value1 = dumpable_recursive_object
+  dumpable_recursive_object.value2 = dumpable_recursive_object
+
+  undumpable_recursive_object = CustomRecursiveStruct.allocate
+  undumpable_recursive_object.value1 = undumpable_recursive_object
+  undumpable_recursive_object.value2 = StringIO.new
 
   it_converts struct, { _object: struct }
   it_converts undumpable_object, { _klass: StringIO, _undumpable: true }
@@ -31,6 +45,13 @@ describe BindingDumper::Dumpers::ObjectDumper do
       :@value2 => { _klass: StringIO, _undumpable: true }
     }
   }
+  it_converts dumpable_recursive_object, { _object: dumpable_recursive_object }
+  # it_converts undumpable_recursive_object do |result|
+  #   expect(result).to be_a(Hash)
+  #   expect(result[:_klass]).to eq(CustomRecursiveStruct)
+  #   expect(result[:_ivars][:@value1]).to equal(result)
+  #   expect(result[:_ivars][:@value2]).to be_a(StringIO)
+  # end
 
   after_deconverting(struct) { |result| expect(result).to eq(struct) }
   after_deconverting(undumpable_object) do |result|
