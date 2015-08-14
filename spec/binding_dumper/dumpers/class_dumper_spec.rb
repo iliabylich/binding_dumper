@@ -1,15 +1,8 @@
 require 'spec_helper'
 
 describe BindingDumper::Dumpers::ClassDumper do
-  class self::TestClass
-    @ivar = 123
-    @@cvar = 456
-  end
-
-  anonymous_klass = Class.new
-
-  it_converts self::TestClass, {
-    _klass: self::TestClass,
+  it_converts ClassWithIvarsAndCvars, {
+    _klass: ClassWithIvarsAndCvars,
     _ivars: {
       :@ivar => 123
     },
@@ -22,14 +15,14 @@ describe BindingDumper::Dumpers::ClassDumper do
     _anonymous: true
   }
 
-  let(:klass) { self.class::TestClass }
+  let(:klass) { ClassWithIvarsAndCvars }
   let(:ivar) { klass.instance_variable_get(:@ivar) }
   let(:cvar) { klass.class_variable_get(:@@cvar) }
 
-  after_deconverting(self::TestClass) do |result|
-    expect(result).to eq(klass)
-    expect(ivar).to eq(123)
-    expect(cvar).to eq(456)
+  after_deconverting(ClassWithIvarsAndCvars) do |result|
+    expect(result).to eq(ClassWithIvarsAndCvars)
+    expect(result.instance_variable_get(:@ivar)).to eq(123)
+    expect(result.class_variable_get(:@@cvar)).to eq(456)
   end
 
   after_deconverting(anonymous_klass) do |result|

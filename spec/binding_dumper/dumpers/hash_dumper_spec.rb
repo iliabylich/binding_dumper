@@ -1,11 +1,6 @@
 require 'spec_helper'
 
 describe BindingDumper::Dumpers::HashDumper do
-  h1 = {}
-  h1[:self] = h1
-
-  h2 = Hash.new { :with_default_block }
-
   it_converts({ })
   it_converts({ :symbol => :symbol })
   it_converts({ 123 => 123 })
@@ -15,8 +10,8 @@ describe BindingDumper::Dumpers::HashDumper do
   it_converts({ false => false })
   it_converts({ nil => nil })
   it_converts({ {} => {} })
-  it_converts(h1, {self: nil})
-  it_converts(h2, {})
+  it_converts(recursive_hash, {self: nil})
+  it_converts(hash_with_default_proc, {})
 
 
   after_deconverting({ })                      { |result| expect(result).to eq({ }) }
@@ -28,7 +23,7 @@ describe BindingDumper::Dumpers::HashDumper do
   after_deconverting({ false => false })       { |result| expect(result).to eq({ false => false }) }
   after_deconverting({ nil => nil })           { |result| expect(result).to eq({ nil => nil }) }
   after_deconverting({ {} => {} })             { |result| expect(result).to eq({ {} => {} }) }
-  after_deconverting(h1)                       { |result| expect(result).to eq({self: nil}) }
-  after_deconverting(h2)                       { |result| expect(result).to eq({}) }
+  after_deconverting(recursive_hash)           { |result| expect(result).to eq({self: nil}) }
+  after_deconverting(hash_with_default_proc)   { |result| expect(result).to eq({}) }
 end
 

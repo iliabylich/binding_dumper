@@ -5,6 +5,8 @@ require 'bundler'
 Bundler.require
 # require GEM_ROOT.join('spec/dummy/config/environment')
 
+Dir[GEM_ROOT.join('spec/fixtures/**/*.rb')].each { |f| require f }
+
 Dir[GEM_ROOT.join('spec/support/**/*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
