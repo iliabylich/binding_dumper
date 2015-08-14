@@ -6,12 +6,12 @@ module ItConvertsHelper
     end
 
     it "converts using UniversalDumper.convert #{from} to #{to}" do
-      converted = UniversalDumper.convert(from)
+      converted = BindingDumper::UniversalDumper.convert(from)
       expect(converted).to eq(to)
     end
 
     it "generates marshalable result for #{from}" do
-      converted = UniversalDumper.convert(from)
+      converted = BindingDumper::UniversalDumper.convert(from)
       can_be_converted = begin
         Marshal.dump(converted)
         true

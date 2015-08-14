@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 def dump(value)
-  UniversalDumper.dump(value)
+  BindingDumper::UniversalDumper.dump(value)
 end
 
 def dump_and_load(value)
-  UniversalDumper.load(UniversalDumper.dump(value))
+  BindingDumper::UniversalDumper.load(BindingDumper::UniversalDumper.dump(value))
 end
 
-describe UniversalDumper do
+describe BindingDumper::UniversalDumper do
   subject(:dumper) { described_class }
 
   def self.it_dumps_and_loads_back(value)

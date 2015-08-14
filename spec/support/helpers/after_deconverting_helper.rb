@@ -7,8 +7,8 @@ module AfterDeconvertingHelper
     end
 
     it "converts and deconverts using UniversalDumper.convert/deconvert object #{object}" do
-      converted = UniversalDumper.convert(object)
-      deconverted = UniversalDumper.deconvert(converted)
+      converted = BindingDumper::UniversalDumper.convert(object)
+      deconverted = BindingDumper::UniversalDumper.deconvert(converted)
       instance_exec(deconverted, &block)
     end
   end

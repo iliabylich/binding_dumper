@@ -1,30 +1,32 @@
-class BindingDumper::Dumpers::PrimitiveDumper < BindingDumper::Dumpers::Abstract
-  alias_method :primitive, :abstract_object
+module BindingDumper
+  class Dumpers::PrimitiveDumper < Dumpers::Abstract
+    alias_method :primitive, :abstract_object
 
-  SUPPORTED_CLASSES = [
-    Numeric,
-    String,
-    NilClass,
-    FalseClass,
-    TrueClass,
-    Symbol
-  ]
+    SUPPORTED_CLASSES = [
+      Numeric,
+      String,
+      NilClass,
+      FalseClass,
+      TrueClass,
+      Symbol
+    ]
 
-  def can_convert?
-    SUPPORTED_CLASSES.any? do |klass|
-      abstract_object.is_a?(klass)
+    def can_convert?
+      SUPPORTED_CLASSES.any? do |klass|
+        abstract_object.is_a?(klass)
+      end
     end
-  end
 
-  def can_deconvert?
-    true
-  end
+    def can_deconvert?
+      true
+    end
 
-  def convert
-    primitive
-  end
+    def convert
+      primitive
+    end
 
-  def deconvert
-    primitive
+    def deconvert
+      primitive
+    end
   end
 end

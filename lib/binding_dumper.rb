@@ -12,65 +12,10 @@ module BindingDumper
     autoload :MagicDumper, 'binding_dumper/dumpers/magic_dumper'
   end
 
-  autoload :MagicObjects, 'binding_dumper/magic_objects'
+  autoload :MagicObjects,    'binding_dumper/magic_objects'
+  autoload :UniversalDumper, 'binding_dumper/universal_dumper'
 end
 
-
-
-module UniversalDumper
-  DUMPERS_ON_CONVERTING = [
-    BindingDumper::Dumpers::MagicDumper,
-    BindingDumper::Dumpers::ProcDumper,
-    BindingDumper::Dumpers::ClassDumper,
-    BindingDumper::Dumpers::ArrayDumper,
-    BindingDumper::Dumpers::HashDumper,
-    BindingDumper::Dumpers::PrimitiveDumper,
-    BindingDumper::Dumpers::ObjectDumper
-  ]
-
-  DUMPERS_ON_DECONVERTING = [
-    BindingDumper::Dumpers::MagicDumper,
-    BindingDumper::Dumpers::ProcDumper,
-    BindingDumper::Dumpers::ArrayDumper,
-    BindingDumper::Dumpers::ClassDumper,
-    BindingDumper::Dumpers::ObjectDumper,
-    BindingDumper::Dumpers::HashDumper,
-    BindingDumper::Dumpers::PrimitiveDumper
-  ]
-
-  extend self
-
-  def converter_for(object)
-    DUMPERS_ON_CONVERTING.detect do |dumper_klass|
-      dumper_klass.new(object).can_convert?
-    end
-  end
-
-  def convert(object, dumped_ids: [])
-    converter_for(object).new(object, dumped_ids: dumped_ids).convert
-  end
-
-  def dump(object)
-    converted = convert(object)
-    Marshal.dump(converted)
-  end
-
-  def deconverter_for(object)
-    DUMPERS_ON_DECONVERTING.detect do |dumper_klass|
-      dumper_klass.new(object).can_deconvert?
-    end
-  end
-
-  def deconvert(converted_data)
-    deconverter = deconverter_for(converted_data)
-    deconverter.new(converted_data).deconvert
-  end
-
-  def load(object)
-    converted = Marshal.load(object)
-    deconvert(converted)
-  end
-end
 
 module BindingDumper
   module CoreExt
@@ -86,13 +31,13 @@ module BindingDumper
       local_variables.each do |lvar_name|
         data_to_dump[:lvars][lvar_name] = local_variable_get(lvar_name)
       end
-      dumped = UniversalDumper.dump(data_to_dump)
+      dumped = BindingDumper::UniversalDumper.dump(data_to_dump)
       block.call(dumped)
     end
 
     def self.included(base)
       def base.load(dumped)
-        undumped = UniversalDumper.load(dumped)
+        undumped = BindingDumper::UniversalDumper.load(dumped)
 
         context = undumped[:context]
 
