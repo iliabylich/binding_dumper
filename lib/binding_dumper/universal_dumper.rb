@@ -32,10 +32,6 @@ module BindingDumper
     def convert(object, dumped_ids: [])
       converter = converter_for(object)
       converter.new(object, dumped_ids: dumped_ids).convert
-      #   {
-      #     _old_object_id: object.object_id,
-      #     _object_data: converter.new(object, dumped_ids: dumped_ids).convert
-      #   }
     end
 
     def dump(object)
@@ -58,7 +54,6 @@ module BindingDumper
 
       deconverter = deconverter_for(object_data)
       if deconverter == Dumpers::PrimitiveDumper
-        # binding.pry
         return deconverter.new(object_data).deconvert
       end
       old_object_id = converted_data[:_old_object_id]
@@ -66,7 +61,6 @@ module BindingDumper
         result = deconverter.new(object_data).deconvert do |object|
           remember!(object, old_object_id)
         end
-        # binding.pry
         result
       end
     end

@@ -3,7 +3,7 @@ $: << GEM_ROOT.join('lib')
 
 require 'bundler'
 Bundler.require
-# require GEM_ROOT.join('spec/dummy/config/environment')
+require GEM_ROOT.join('spec/dummy/config/environment')
 
 Dir[GEM_ROOT.join('spec/fixtures/**/*.rb')].each { |f| require f }
 
@@ -18,5 +18,12 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-  # config.before(:suite) { User.delete_all }
+  config.before :each do
+    BindingDumper::UniversalDumper.flush_memories!
+  end
+
+  config.before :each, type: :functional do
+    User.delete_all
+    StoredBinding.delete_all
+  end
 end
