@@ -8,15 +8,17 @@ module BindingDumper
 
     def can_deconvert?
       abstract_object.is_a?(Hash) &&
-        (abstract_object.has_key?(:_klass) || abstract_object.has_key?(:_object))
+        (
+          abstract_object.has_key?(:_klass) ||
+          abstract_object.has_key?(:_object) ||
+          abstract_object.has_key?(:_old_object_id)
+        )
     end
 
     def convert
       unless should_convert?
         return { _existing_object_id: object.object_id }
       end
-
-      new_dumped_ids = dumped_ids + [object.object_id]
 
       if can_be_fully_dumped?(object)
         {
@@ -28,10 +30,10 @@ module BindingDumper
           _undumpable: true
         }
       else
-        new_dumped_ids = dumped_ids + [object.object_id]
+        dumped_ids << object.object_id
         {
           _klass: object.class,
-          _ivars: converted_ivars(dumped_ids: new_dumped_ids),
+          _ivars: converted_ivars(dumped_ids: dumped_ids),
           _old_object_id: object.object_id
         }
       end
@@ -58,13 +60,8 @@ module BindingDumper
     def converted_ivars(dumped_ids: [])
       converted = object.instance_variables.map do |ivar_name|
         ivar = object.instance_variable_get(ivar_name)
-        # if dumped_ids.include?(ivar.object_id)
-        #   []
-        # else
-          # new_dumped_ids = dumped_ids + [ivar.object_id]
-          conveted_ivar = UniversalDumper.convert(ivar, dumped_ids: dumped_ids)
-          [ivar_name, conveted_ivar]
-        # end
+        conveted_ivar = UniversalDumper.convert(ivar, dumped_ids: dumped_ids)
+        [ivar_name, conveted_ivar]
       end.reject(&:empty?)
       Hash[converted] rescue binding.pry
     end

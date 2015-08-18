@@ -1,12 +1,7 @@
-$DUMPED_CLASSES = Hash.new(0)
-
 class BindingDumper::Dumpers::Abstract
   attr_reader :abstract_object, :dumped_ids
 
   def initialize(abstract_object, dumped_ids: [])
-    if abstract_object.class.name
-      $DUMPED_CLASSES[abstract_object.class] += 1
-    end
     @abstract_object = abstract_object
     @dumped_ids = dumped_ids
   end

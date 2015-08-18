@@ -1,14 +1,25 @@
 require 'spec_helper'
 
 describe BindingDumper::Dumpers::MagicDumper do
-  it_converts MagicClass, { _magic: 'MagicClass' }
-  it_converts MAGIC_DATA, { _magic: 'MagicClass.instance_variable_get(:@magic)' }
+  context 'top level data' do
+    it_converts MagicFixtures::MagicClass do |result|
+      expected = { _magic: 'MagicFixtures::MagicClass' }
+      expect(result).to eq(expected)
+    end
 
-  after_deconverting(MagicClass) do |result|
-    expect(result).to eq(MagicClass)
+    after_deconverting MagicFixtures::MagicClass do |result|
+      expect(result).to eq(MagicFixtures::MagicClass)
+    end
   end
 
-  after_deconverting(MAGIC_DATA) do |result|
-    expect(result).to eq(MAGIC_DATA)
+  context 'nested data' do
+    it_converts MagicFixtures::MAGIC_DATA do |result|
+      expected = { _magic: 'MagicFixtures::MagicClass.instance_variable_get(:@magic)' }
+      expect(result).to eq(expected)
+    end
+
+    after_deconverting MagicFixtures::MAGIC_DATA do |result|
+      expect(result).to eq(MagicFixtures::MAGIC_DATA)
+    end
   end
 end

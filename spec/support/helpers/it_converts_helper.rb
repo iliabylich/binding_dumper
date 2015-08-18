@@ -1,12 +1,9 @@
 module ItConvertsHelper
-  def it_converts(from, to = from, &block)
-    it "converts using #{described_class}.convert #{from} to #{to}" do
-      converted = described_class.new(from).convert
-      if block
-        instance_exec(converted, &block)
-      else
-        expect(converted).to eq(to)
-      end
+  def it_converts(from, primitive: false, &block)
+    if primitive
+      to = from
+    else
+      to = { _old_object_id: from.object_id, _object_data: from }
     end
 
     it "converts using UniversalDumper.convert #{from} to #{to}" do

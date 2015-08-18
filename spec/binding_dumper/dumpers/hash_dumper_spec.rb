@@ -1,29 +1,87 @@
 require 'spec_helper'
 
 describe BindingDumper::Dumpers::HashDumper do
-  it_converts({ })
-  it_converts({ :symbol => :symbol })
-  it_converts({ 123 => 123 })
-  it_converts({ 123.456 => 123.456 })
-  it_converts({ 'string' => 'string' })
-  it_converts({ true => true })
-  it_converts({ false => false })
-  it_converts({ nil => nil })
-  it_converts({ {} => {} })
-  it_converts(recursive_hash, {self: nil})
-  it_converts(hash_with_default_proc, {})
+  context 'blank hash' do
+    it_converts HashFixtures.blank
+    it_deconverts_back HashFixtures.blank
+  end
 
+  context 'hash with symbols' do
+    it_converts HashFixtures.with_symbols
+    it_deconverts_back HashFixtures.with_symbols
+  end
 
-  after_deconverting({ })                      { |result| expect(result).to eq({ }) }
-  after_deconverting({ :symbol => :symbol })   { |result| expect(result).to eq({ :symbol => :symbol }) }
-  after_deconverting({ 123 => 123 })           { |result| expect(result).to eq({ 123 => 123}) }
-  after_deconverting({ 123.456 => 123.456 })   { |result| expect(result).to eq({ 123.456 => 123.456 }) }
-  after_deconverting({ 'string' => 'string' }) { |result| expect(result).to eq({ 'string' => 'string' }) }
-  after_deconverting({ true => true })         { |result| expect(result).to eq({ true => true }) }
-  after_deconverting({ false => false })       { |result| expect(result).to eq({ false => false }) }
-  after_deconverting({ nil => nil })           { |result| expect(result).to eq({ nil => nil }) }
-  after_deconverting({ {} => {} })             { |result| expect(result).to eq({ {} => {} }) }
-  after_deconverting(recursive_hash)           { |result| expect(result).to eq({self: nil}) }
-  after_deconverting(hash_with_default_proc)   { |result| expect(result).to eq({}) }
+  context 'hash with strings' do
+    it_converts HashFixtures.with_strings
+    it_deconverts_back HashFixtures.with_strings
+  end
+
+  context 'hash with numbers' do
+    it_converts HashFixtures.with_numbers
+    it_deconverts_back HashFixtures.with_numbers
+  end
+
+  context 'hash with floats' do
+    it_converts HashFixtures.with_floats
+    it_deconverts_back HashFixtures.with_floats
+  end
+
+  context 'hash with true' do
+    it_converts HashFixtures.with_true
+    it_deconverts_back HashFixtures.with_true
+  end
+
+  context 'hash with false' do
+    it_converts HashFixtures.with_false
+    it_deconverts_back HashFixtures.with_false
+  end
+
+  context 'hash with nil' do
+    it_converts HashFixtures.with_nil
+    it_deconverts_back HashFixtures.with_nil
+  end
+
+  context 'deep hash' do
+    it_converts HashFixtures.deep do |result|
+      expected = {
+        _old_object_id: HashFixtures.deep.object_id,
+        _object_data: {
+          {
+            _old_object_id: HashFixtures.deep.keys.first.object_id,
+            _object_data: {}
+          } => {
+            _old_object_id: HashFixtures.deep.values.first.object_id,
+            _object_data: {}
+          }
+        }
+      }
+      expect(result).to eq(expected)
+    end
+
+    it_deconverts_back HashFixtures.deep
+  end
+
+  context 'recursive hash' do
+    it_converts HashFixtures.recursive do |result|
+      expected = {
+        _old_object_id: HashFixtures.recursive.object_id,
+        _object_data: {
+          self: {
+            _existing_object_id: HashFixtures.recursive.object_id
+          }
+        }
+      }
+      expect(result).to eq(expected)
+    end
+
+    after_deconverting HashFixtures.recursive do |result|
+      expect(result).to eq(result[:self])
+    end
+  end
+
+  context 'hash with default proc' do
+    it_converts HashFixtures.with_default_proc
+    it_deconverts_back HashFixtures.with_default_proc
+  end
 end
 

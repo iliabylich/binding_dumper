@@ -13,13 +13,13 @@ module BindingDumper
 
     def convert
       return unless should_convert?
-      new_dumped_ids = dumped_ids + [klass.object_id]
+      dumped_ids << klass.object_id
 
       if klass.name
         {
           _klass: klass,
-          _ivars: converted_ivars(dumped_ids: new_dumped_ids),
-          _cvars: converted_cvars(dumped_ids: new_dumped_ids)
+          _ivars: converted_ivars(dumped_ids: dumped_ids),
+          _cvars: converted_cvars(dumped_ids: dumped_ids)
         }
       else
         {
@@ -51,12 +51,8 @@ module BindingDumper
     def converted_ivars(dumped_ids: [])
       converted = klass.instance_variables.map do |ivar_name|
         ivar = klass.instance_variable_get(ivar_name)
-        if dumped_ids.include?(ivar.object_id)
-          []
-        else
-          conveted_ivar = UniversalDumper.convert(ivar, dumped_ids: dumped_ids)
-          [ivar_name, conveted_ivar]
-        end
+        conveted_ivar = UniversalDumper.convert(ivar, dumped_ids: dumped_ids)
+        [ivar_name, conveted_ivar]
       end
       Hash[converted]
     end

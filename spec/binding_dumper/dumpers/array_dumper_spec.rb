@@ -1,32 +1,103 @@
 require 'spec_helper'
 
 describe BindingDumper::Dumpers::ArrayDumper do
-  it_converts []
-  it_converts [:symbol]
-  it_converts [123]
-  it_converts [123.456]
-  it_converts ['string']
-  it_converts [true]
-  it_converts [false]
-  it_converts [nil]
-  it_converts [[[]]]
-  it_converts recursive_array, [nil]
-  it_converts [IO.new(1)], [{ _klass: IO, _undumpable: true }]
+  context 'blank array' do
+    it_converts ArrayFixtures.blank
+    it_deconverts_back ArrayFixtures.blank
+  end
 
+  context 'array with symbol' do
+    it_converts ArrayFixtures.with_symbol
+    it_deconverts_back ArrayFixtures.with_symbol
+  end
 
-  after_deconverting([])              { |result| expect(result).to eq([]) }
-  after_deconverting([:symbol])       { |result| expect(result).to eq([:symbol]) }
-  after_deconverting([123])           { |result| expect(result).to eq([123]) }
-  after_deconverting([123.456])       { |result| expect(result).to eq([123.456]) }
-  after_deconverting(['string'])      { |result| expect(result).to eq(['string']) }
-  after_deconverting([true])          { |result| expect(result).to eq([true]) }
-  after_deconverting([false])         { |result| expect(result).to eq([false]) }
-  after_deconverting([nil])           { |result| expect(result).to eq([nil]) }
-  after_deconverting([[[]]])          { |result| expect(result).to eq([[[]]]) }
-  after_deconverting(recursive_array) { |result| expect(result).to eq([nil]) }
-  after_deconverting([IO.new(1)]) do |result|
-    expect(result).to be_an(Array)
-    expect(result.length).to eq(1)
-    expect(result[0]).to be_a(IO)
+  context 'array with number' do
+    it_converts ArrayFixtures.with_number
+    it_deconverts_back ArrayFixtures.with_number
+  end
+
+  context 'array with float' do
+    it_converts ArrayFixtures.with_float
+    it_deconverts_back ArrayFixtures.with_float
+  end
+
+  context 'array with string' do
+    it_converts ArrayFixtures.with_string
+    it_deconverts_back ArrayFixtures.with_string
+  end
+
+  context 'array with true' do
+    it_converts ArrayFixtures.with_true
+    it_deconverts_back ArrayFixtures.with_true
+  end
+
+  context 'array with false' do
+    it_converts ArrayFixtures.with_false
+    it_deconverts_back ArrayFixtures.with_false
+  end
+
+  context 'array with nil' do
+    it_converts ArrayFixtures.with_nil
+    it_deconverts_back ArrayFixtures.with_nil
+  end
+
+  context 'deep array' do
+    it_converts ArrayFixtures.deep do |result|
+      expected = {
+        _old_object_id: ArrayFixtures.deep.object_id,
+        _object_data: [
+          {
+            _old_object_id: ArrayFixtures.deep[0].object_id,
+            _object_data: [
+              {
+                _old_object_id: ArrayFixtures.deep[0][0].object_id,
+                _object_data: []
+              }
+            ]
+          }
+        ]
+      }
+      expect(result).to eq(expected)
+    end
+
+    it_deconverts_back ArrayFixtures.deep
+  end
+
+  context 'recursive array' do
+    it_converts ArrayFixtures.recursive do |result|
+      expected = {
+        _old_object_id: ArrayFixtures.recursive.object_id,
+        _object_data: [
+          {
+            _existing_object_id: ArrayFixtures.recursive.object_id
+          }
+        ]
+      }
+      expect(result).to eq(expected)
+    end
+
+    after_deconverting ArrayFixtures.recursive do |result|
+      expect(result).to equal(result[0])
+    end
+  end
+
+  context 'undumpable array' do
+    it_converts ArrayFixtures.undumpable do |result|
+      expected = {
+        _old_object_id: ArrayFixtures.undumpable.object_id,
+        _object_data: [
+          {
+            _klass: StringIO,
+            _undumpable: true
+          }
+        ]
+      }
+      expect(result).to eq(expected)
+    end
+
+    after_deconverting ArrayFixtures.undumpable do |result|
+      expect(result).to be_an(Array)
+      expect(result[0]).to be_a(StringIO)
+    end
   end
 end

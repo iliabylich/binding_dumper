@@ -1,19 +1,19 @@
 require 'spec_helper'
 
 describe BindingDumper::Dumpers::PrimitiveDumper do
-  it_converts true
-  it_converts false
-  it_converts nil
-  it_converts :some_symbol
-  it_converts 'some string'
-  it_converts 123
-  it_converts 123.456
+  it_converts true, primitive: true
+  it_converts false, primitive: true
+  it_converts nil, primitive: true
+  it_converts :some_symbol, primitive: true
+  it_converts 'some string', primitive: true
+  it_converts 123, primitive: true
+  it_converts 123.456, primitive: true
 
-  after_deconverting(true)          { |result| expect(result).to eq(true) }
-  after_deconverting(false)         { |result| expect(result).to eq(false) }
-  after_deconverting(nil)           { |result| expect(result).to eq(nil) }
-  after_deconverting(:some_symbol)  { |result| expect(result).to eq(:some_symbol) }
-  after_deconverting('some string') { |result| expect(result).to eq('some string') }
-  after_deconverting(123)           { |result| expect(result).to eq(123) }
-  after_deconverting(123.456)       { |result| expect(result).to eq(123.456) }
+  it_deconverts_back(true, primitive: true)
+  it_deconverts_back(false, primitive: true)
+  it_deconverts_back(nil, primitive: true)
+  it_deconverts_back(:some_symbol, primitive: true)
+  it_deconverts_back('some string', primitive: true)
+  it_deconverts_back(123, primitive: true)
+  it_deconverts_back(123.456, primitive: true)
 end

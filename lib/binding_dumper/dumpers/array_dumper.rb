@@ -11,18 +11,29 @@ module BindingDumper
     end
 
     def convert
-      return unless should_convert?
-      new_dumped_ids = dumped_ids + [array.object_id]
-
-      array.map do |item|
-        UniversalDumper.convert(item, dumped_ids: new_dumped_ids)
+      unless should_convert?
+        return { _existing_object_id: array.object_id }
       end
+
+      dumped_ids << array.object_id
+
+      result = array.map do |item|
+        UniversalDumper.convert(item, dumped_ids: dumped_ids)
+      end
+
+      {
+        _old_object_id: array.object_id,
+        _object_data: result
+      }
     end
 
     def deconvert
-      array.map do |converted_item|
-        UniversalDumper.deconvert(converted_item)
+      result = []
+      yield result
+      array.each do |converted_item|
+        result << UniversalDumper.deconvert(converted_item)
       end
+      result
     end
   end
 end

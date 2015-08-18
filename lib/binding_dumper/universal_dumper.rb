@@ -12,6 +12,7 @@ module BindingDumper
 
     DUMPERS_ON_DECONVERTING = [
       Dumpers::MagicDumper,
+      Dumpers::ExistingObjectDumper,
       Dumpers::ProcDumper,
       Dumpers::ArrayDumper,
       Dumpers::ClassDumper,
@@ -29,7 +30,12 @@ module BindingDumper
     end
 
     def convert(object, dumped_ids: [])
-      converter_for(object).new(object, dumped_ids: dumped_ids).convert
+      converter = converter_for(object)
+      converter.new(object, dumped_ids: dumped_ids).convert
+      #   {
+      #     _old_object_id: object.object_id,
+      #     _object_data: converter.new(object, dumped_ids: dumped_ids).convert
+      #   }
     end
 
     def dump(object)
@@ -44,13 +50,51 @@ module BindingDumper
     end
 
     def deconvert(converted_data)
-      deconverter = deconverter_for(converted_data)
-      deconverter.new(converted_data).deconvert
+      object_data = if converted_data.is_a?(Hash) && converted_data.has_key?(:_object_data)
+        converted_data[:_object_data]
+      else
+        converted_data
+      end
+
+      deconverter = deconverter_for(object_data)
+      if deconverter == Dumpers::PrimitiveDumper
+        # binding.pry
+        return deconverter.new(object_data).deconvert
+      end
+      old_object_id = converted_data[:_old_object_id]
+      with_memories(old_object_id) do
+        result = deconverter.new(object_data).deconvert do |object|
+          remember!(object, old_object_id)
+        end
+        # binding.pry
+        result
+      end
     end
 
     def load(object)
       converted = Marshal.load(object)
       deconvert(converted)
+    end
+
+    def memories
+      @memories ||= {}
+    end
+
+    def flush_memories!
+      @memories = {}
+    end
+
+    def with_memories(old_object_id, &block)
+      # binding.pry
+      if memories.has_key?(old_object_id)
+        memories[old_object_id]
+      else
+        yield
+      end
+    end
+
+    def remember!(object, object_id)
+      @memories[object_id] = object
     end
   end
 end

@@ -10,6 +10,7 @@ module BindingDumper
     autoload :ClassDumper, 'binding_dumper/dumpers/class_dumper'
     autoload :ProcDumper, 'binding_dumper/dumpers/proc_dumper'
     autoload :MagicDumper, 'binding_dumper/dumpers/magic_dumper'
+    autoload :ExistingObjectDumper, 'binding_dumper/dumpers/existing_object_dumper'
   end
 
   autoload :MagicObjects,    'binding_dumper/magic_objects'
