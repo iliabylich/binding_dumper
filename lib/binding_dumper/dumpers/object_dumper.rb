@@ -47,6 +47,8 @@ module BindingDumper
         result = klass.allocate
         return result if object[:_undumpable]
 
+        yield result
+
         object[:_ivars].each do |ivar_name, converted_ivar|
           ivar = UniversalDumper.deconvert(converted_ivar)
           result.instance_variable_set(ivar_name, ivar)

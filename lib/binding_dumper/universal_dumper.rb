@@ -85,7 +85,6 @@ module BindingDumper
     end
 
     def with_memories(old_object_id, &block)
-      # binding.pry
       if memories.has_key?(old_object_id)
         memories[old_object_id]
       else
