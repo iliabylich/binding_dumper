@@ -2,12 +2,18 @@ GEM_ROOT = Pathname.new File.expand_path('../..', __FILE__)
 $: << GEM_ROOT.join('lib')
 
 require 'bundler'
-Bundler.require
 require GEM_ROOT.join('spec/dummy/config/environment')
+require 'rspec/rails'
 
 Dir[GEM_ROOT.join('spec/fixtures/**/*.rb')].each { |f| require f }
 
 Dir[GEM_ROOT.join('spec/support/**/*.rb')].each { |f| require f }
+
+class ActionDispatch::Response
+  def restored_from_binding
+    @cv = new_cond
+  end
+end
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -22,7 +28,7 @@ RSpec.configure do |config|
     BindingDumper::UniversalDumper.flush_memories!
   end
 
-  config.before :each, type: :functional do
+  config.before :each, type: :controller do
     User.delete_all
     StoredBinding.delete_all
   end

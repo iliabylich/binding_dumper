@@ -53,6 +53,11 @@ module BindingDumper
           ivar = UniversalDumper.deconvert(converted_ivar)
           result.instance_variable_set(ivar_name, ivar)
         end
+
+        if result.respond_to?(:restored_from_binding)
+          result.restored_from_binding
+        end
+
         result
       end
     end

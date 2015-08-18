@@ -6,3 +6,4 @@ gemspec
 gem 'rails-dummy'
 gem 'sqlite3'
 gem 'pry'
+gem 'rspec-rails'
