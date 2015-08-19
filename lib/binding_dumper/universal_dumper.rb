@@ -29,9 +29,9 @@ module BindingDumper
       end
     end
 
-    def convert(object, dumped_ids: [])
+    def convert(object, dumped_ids = [])
       converter = converter_for(object)
-      converter.new(object, dumped_ids: dumped_ids).convert
+      converter.new(object, dumped_ids).convert
     end
 
     def dump(object)

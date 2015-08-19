@@ -18,7 +18,7 @@ module BindingDumper
       dumped_ids << array.object_id
 
       result = array.map do |item|
-        UniversalDumper.convert(item, dumped_ids: dumped_ids)
+        UniversalDumper.convert(item, dumped_ids)
       end
 
       {

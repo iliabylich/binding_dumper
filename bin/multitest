@@ -5,7 +5,7 @@
 # SILENT=true bin/multitest
 #
 
-RUBY_VERSIONS=(2.2.3 2.2.2 2.1.7 2.1.6 2.0.0)
+RUBY_VERSIONS=(2.2.3 2.2.2 2.1.7 2.1.6 2.0.0 ruby-1.9.3-p551)
 RUBY_GEMSET=$(cat .ruby-gemset)
 
 for CURRENT_RUBY_VERSION in "${RUBY_VERSIONS[@]}"
@@ -17,11 +17,13 @@ do
     rvm use $CURRENT_RUBY_VERSION --install --binary --fuzzy
     rvm use --create $CURRENT_RUBY_VERSION@$RUBY_GEMSET
 
+    gem install bundler -v 1.10.6
     bundle install
   else
     rvm use $CURRENT_RUBY_VERSION --install --binary --fuzzy > /dev/null
     rvm use --create $CURRENT_RUBY_VERSION@$RUBY_GEMSET > /dev/null
 
+    gem install bundler -v 1.10.6
     bundle install > /dev/null
   fi
 

@@ -37,23 +37,29 @@ module BindingDumper
           end
 
           m = Module.new do
+            def self.included(_base)
+              _base.class_eval do
+                alias_method :_original_eval, :eval
+                def eval(data, *args)
+                  case data
+                  when /__FILE__/
+                    _file
+                  when /__LINE__/
+                    _line
+                  when /__method__/
+                    _method
+                  else
+                    _original_eval(data, *args)
+                  end
+                end
+              end
+            end
+
             define_method(:_file) { undumped[:file] }
             define_method(:_line) { undumped[:line] }
             define_method(:_method) { undumped[:method] }
-            def eval(data, *args)
-              case data
-              when /__FILE__/
-                _file
-              when /__LINE__/
-                _line
-              when /__method__/
-                _method
-              else
-                super
-              end
-            end
           end
-          (class << result; self; end).send(:prepend, m)
+          (class << result; self; end).send(:include, m)
           result
         end
 

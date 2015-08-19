@@ -33,7 +33,7 @@ module BindingDumper
         dumped_ids << object.object_id
         {
           _klass: object.class,
-          _ivars: converted_ivars(dumped_ids: dumped_ids),
+          _ivars: converted_ivars(dumped_ids),
           _old_object_id: object.object_id
         }
       end
@@ -64,10 +64,10 @@ module BindingDumper
 
     private
 
-    def converted_ivars(dumped_ids: [])
+    def converted_ivars(dumped_ids = [])
       converted = object.instance_variables.map do |ivar_name|
         ivar = object.instance_variable_get(ivar_name)
-        conveted_ivar = UniversalDumper.convert(ivar, dumped_ids: dumped_ids)
+        conveted_ivar = UniversalDumper.convert(ivar, dumped_ids)
         [ivar_name, conveted_ivar]
       end.reject(&:empty?)
       Hash[converted] rescue binding.pry

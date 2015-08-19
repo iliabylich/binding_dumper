@@ -18,8 +18,8 @@ module BindingDumper
       if klass.name
         {
           _klass: klass,
-          _ivars: converted_ivars(dumped_ids: dumped_ids),
-          _cvars: converted_cvars(dumped_ids: dumped_ids)
+          _ivars: converted_ivars(dumped_ids),
+          _cvars: converted_cvars(dumped_ids)
         }
       else
         {
@@ -48,22 +48,22 @@ module BindingDumper
 
     private
 
-    def converted_ivars(dumped_ids: [])
+    def converted_ivars(dumped_ids = [])
       converted = klass.instance_variables.map do |ivar_name|
         ivar = klass.instance_variable_get(ivar_name)
-        conveted_ivar = UniversalDumper.convert(ivar, dumped_ids: dumped_ids)
+        conveted_ivar = UniversalDumper.convert(ivar, dumped_ids)
         [ivar_name, conveted_ivar]
       end
       Hash[converted]
     end
 
-    def converted_cvars(dumped_ids: [])
+    def converted_cvars(dumped_ids = [])
       converted = klass.class_variables.map do |cvar_name|
         ivar = klass.class_variable_get(cvar_name)
         if dumped_ids.include?(ivar.object_id)
           []
         else
-          conveted_ivar = UniversalDumper.convert(ivar, dumped_ids: dumped_ids)
+          conveted_ivar = UniversalDumper.convert(ivar, dumped_ids)
           [cvar_name, conveted_ivar]
         end
       end

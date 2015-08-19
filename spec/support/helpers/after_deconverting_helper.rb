@@ -7,12 +7,12 @@ module AfterDeconvertingHelper
     end
   end
 
-  def it_deconverts_back(object, primitive: false)
+  def it_deconverts_back(object, options = { primitive: false })
     it "converts and deconverts using UniversalDumper.convert/deconvert object #{object}" do
       converted = BindingDumper::UniversalDumper.convert(object)
       deconverted = BindingDumper::UniversalDumper.deconvert(converted)
 
-      if primitive
+      if options[:primitive]
         expect(object).to equal(deconverted)
       else
         expect(object).to eq(deconverted)

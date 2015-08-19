@@ -8,5 +8,6 @@ rvm:
   - 2.1.7
   - 2.1.6
   - 2.0.0
+  - ruby-1.9.3-p551
 before_script:
   - bin/dummy_rake db:create db:migrate

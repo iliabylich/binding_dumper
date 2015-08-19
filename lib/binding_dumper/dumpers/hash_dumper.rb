@@ -18,8 +18,8 @@ module BindingDumper
       dumped_ids << hash.object_id
 
       prepared = hash.map do |k, v|
-        converted_k = UniversalDumper.convert(k, dumped_ids: dumped_ids)
-        converted_v = UniversalDumper.convert(v, dumped_ids: dumped_ids)
+        converted_k = UniversalDumper.convert(k, dumped_ids)
+        converted_v = UniversalDumper.convert(v, dumped_ids)
         [converted_k, converted_v]
       end
 

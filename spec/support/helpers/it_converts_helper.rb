@@ -1,6 +1,6 @@
 module ItConvertsHelper
-  def it_converts(from, primitive: false, &block)
-    if primitive
+  def it_converts(from, options = { primitive: false }, &block)
+    if options[:primitive]
       to = from
     else
       to = { _old_object_id: from.object_id, _object_data: from }
