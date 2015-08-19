@@ -1,5 +1,6 @@
+require 'pathname'
 GEM_ROOT = Pathname.new File.expand_path('../..', __FILE__)
-$: << GEM_ROOT.join('lib')
+$: << GEM_ROOT.join('lib').to_s
 
 require 'bundler'
 require GEM_ROOT.join('spec/dummy/config/environment')
