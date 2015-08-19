@@ -1,8 +1,8 @@
 module BindingDumper
   module CoreExt
     def lvars_to_dump
-      local_variables.each_with_object({}) do |lvar_name, result|
-        result[lvar_name] = local_variable_get(lvar_name)
+      self.eval('local_variables').each_with_object({}) do |lvar_name, result|
+        result[lvar_name] = eval(lvar_name.to_s)
       end
     end
 
@@ -19,7 +19,8 @@ module BindingDumper
 
     def dump(&block)
       dumped = UniversalDumper.dump(data_to_dump)
-      block.call(dumped)
+      block.call(dumped) if block_given?
+      dumped
     end
 
     def self.included(base)
@@ -32,7 +33,7 @@ module BindingDumper
           result = binding
 
           undumped[:lvars].each do |lvar_name, lvar|
-            result.local_variable_set(lvar_name, lvar)
+            result.eval("#{lvar_name} = ObjectSpace._id2ref(#{lvar.object_id})")
           end
 
           m = Module.new do
