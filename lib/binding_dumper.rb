@@ -16,7 +16,13 @@ module BindingDumper
   autoload :Memories,        'binding_dumper/memories'
   autoload :MagicObjects,    'binding_dumper/magic_objects'
   autoload :UniversalDumper, 'binding_dumper/universal_dumper'
-  autoload :CoreExt,         'binding_dumper/core_ext'
+
+  module CoreExt
+    autoload :BindingExt, 'binding_dumper/core_ext/binding_ext'
+    autoload :LocalBindingPatchBuilder, 'binding_dumper/core_ext/local_binding_patch_builder'
+    autoload :MagicContextPatchBuilder, 'binding_dumper/core_ext/magic_context_patch_builder'
+  end
 end
 
-Binding.send(:include, BindingDumper::CoreExt)
+Binding.send(:include, BindingDumper::CoreExt::BindingExt)
+Binding.send(:extend, BindingDumper::CoreExt::BindingExt::ClassMethods)
