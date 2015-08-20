@@ -13,6 +13,7 @@ module BindingDumper
     autoload :ExistingObjectDumper, 'binding_dumper/dumpers/existing_object_dumper'
   end
 
+  autoload :Memories,        'binding_dumper/memories'
   autoload :MagicObjects,    'binding_dumper/magic_objects'
   autoload :UniversalDumper, 'binding_dumper/universal_dumper'
   autoload :CoreExt,         'binding_dumper/core_ext'
