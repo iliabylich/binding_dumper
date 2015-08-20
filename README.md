@@ -1,8 +1,8 @@
 # BindingDumper
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/binding_dumper`. To experiment with that code, run `bin/console` for an interactive prompt.
+A gem for dumping a whole binding and restoring it later. After restoring you can use `pry` to perform delayed debugging.
 
-TODO: Delete this and the text above, and describe your gem
+**WARNING** this gem is not ready for production yet, please, use it only in development environment.
 
 ## Installation
 
@@ -22,13 +22,46 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+To dump a binding run
+
+``` ruby
+binding.dump
+# => "a lot of strange output here, that's fine"
+```
+
+Ideally, you should persist an output somewhere (like in the database). Let's say we have a Rails model called `DumpedBinding` with `data` field:
+
+``` ruby
+StoredBinding.create(data: binding.dump)
+```
+
+Make your server to execute the code above (just put it to any controller's action), go to the console, and run:
+``` ruby
+b = Bidning.load(StoredBinding.last.data)
+b.pry
+```
+
+And enjoy!
+
+## Requirements
+
++ Ruby >= 1.9.3 (see travis.yml for supported versions)
+
+## Examples
+
+The simplest one is in the file `test.rb`.
+
+A bit more complex example with Rails environment is in `spec/dummy/app/controllers/users_controller.rb`
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
+Clone the repo, run `bundle install`.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To run all tests using current ruby version, run `rspec` or `rake`.
+
+To run all tests with ALL supported ruby versions, run `bin/multitest` and follow the output.
+
+To run dummy app, run `bin/dummy_rails s` (`bin/dummy_rails c` for console).
 
 ## Contributing
 

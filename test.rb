@@ -15,7 +15,3 @@ end
 
 A.new.run
 Binding.load($b).pry
-
-# a = A.new
-# require 'binding_dumper/magic_objects'
-# binding.pry
