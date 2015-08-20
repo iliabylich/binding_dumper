@@ -23,7 +23,7 @@ do
     rvm use $CURRENT_RUBY_VERSION --install --binary --fuzzy > /dev/null
     rvm use --create $CURRENT_RUBY_VERSION@$RUBY_GEMSET > /dev/null
 
-    gem install bundler -v 1.10.6
+    gem install bundler -v 1.10.6 > /dev/null
     bundle install > /dev/null
   fi
 
