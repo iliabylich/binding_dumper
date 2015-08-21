@@ -1,4 +1,8 @@
 module BindingDumper
+  # Class responsible for converting primitive objects to marshalable hash
+  #
+  # @see SUPPORTED_CLASSES
+  #
   class Dumpers::PrimitiveDumper < Dumpers::Abstract
     alias_method :primitive, :abstract_object
 
@@ -11,6 +15,10 @@ module BindingDumper
       Symbol
     ]
 
+    # Returns true if PrimitiveDumper can convert passed +abstract_object+
+    #
+    # @return [true, false]
+    #
     def can_convert?
       SUPPORTED_CLASSES.any? do |klass|
         abstract_object.is_a?(klass)
@@ -21,10 +29,18 @@ module BindingDumper
       true
     end
 
+    # Returns +abstract_object+
+    #
+    # @return [Object]
+    #
     def convert
       primitive
     end
 
+    # Returns +abstract_object+
+    #
+    # @return [Object]
+    #
     def deconvert
       primitive
     end

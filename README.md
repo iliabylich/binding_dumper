@@ -1,5 +1,9 @@
 # BindingDumper
 
+[![Build Status](https://travis-ci.org/iliabylich/binding_dumper.svg?branch=master)](https://travis-ci.org/iliabylich/binding_dumper)
+[![Code Climate](https://codeclimate.com/github/iliabylich/binding_dumper/badges/gpa.svg)](https://codeclimate.com/github/iliabylich/binding_dumper)
+[![Inline docs](http://inch-ci.org/github/iliabylich/binding_dumper.svg?branch=master)](http://inch-ci.org/github/iliabylich/binding_dumper)
+
 A gem for dumping a whole binding and restoring it later. After restoring you can use `pry` to perform delayed debugging.
 
 **WARNING** this gem is not ready for production yet, please, use it only in development environment.

@@ -1,15 +1,35 @@
 module BindingDumper
+  # Class responsible for converting arbitary hashes to marshalable hashes
+  #
+  # @example
+  #   hash = { key: 'value' }
+  #   dump = BindingDumper::Dumpers::HashDumper.new(hash).convert
+  #   BindingDumper::Dumpers::HashDumper.new(dump).deconvert
+  #   # => { key: 'value' }
+  #
   class Dumpers::HashDumper < Dumpers::Abstract
     alias_method :hash, :abstract_object
 
+    # Returns true if HashDumper can convert passed +abstract_object+
+    #
+    # @return [true, false]
+    #
     def can_convert?
       hash.is_a?(Hash)
     end
 
+    # Returns true if HashDumper can deconvert passed +abstract_object+
+    #
+    # @return [true, false]
+    #
     def can_deconvert?
       abstract_object.is_a?(Hash)
     end
 
+    # Converts passed +abstract_object+ to marshalable Hash
+    #
+    # @return [Hash]
+    #
     def convert
       unless should_convert?
         return { _existing_object_id: hash.object_id }
@@ -31,6 +51,10 @@ module BindingDumper
       }
     end
 
+    # Deconverts passed +abstract_object+ back to the original state
+    #
+    # @return [Hash]
+    #
     def deconvert
       result = {}
       yield result

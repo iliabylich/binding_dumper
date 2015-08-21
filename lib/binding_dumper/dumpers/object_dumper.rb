@@ -1,11 +1,28 @@
 module BindingDumper
+  # Class responsible for converting objects to marshalable Hash
+  #
+  # @example
+  #   o = Object.new
+  #   dump = BindingDumper::Dumpers::Array.new(o).convert
+  #   # => { marshalable: :hash }
+  #   BindingDumper::Dumpers::Array.new(dump).deconvert
+  #   # => o
+  #
   class Dumpers::ObjectDumper < Dumpers::Abstract
     alias_method :object, :abstract_object
 
+    # Returns true if ObjectDumper can convert passed +abstract_object+
+    #
+    # @return [true, false]
+    #
     def can_convert?
       true
     end
 
+    # Returns true if ObjectDumper can deconvert passed +abstract_object+
+    #
+    # @return [true, false]
+    #
     def can_deconvert?
       abstract_object.is_a?(Hash) &&
         (
@@ -15,6 +32,10 @@ module BindingDumper
         )
     end
 
+    # Converts passed +abstract_object+ to marshalable Hash
+    #
+    # @return [Hash]
+    #
     def convert
       unless should_convert?
         return { _existing_object_id: object.object_id }
@@ -39,6 +60,10 @@ module BindingDumper
       end
     end
 
+    # Deconverts passed +abstract_object+ back to the original state
+    #
+    # @return [Object]
+    #
     def deconvert
       if object.has_key?(:_object)
         object[:_object]
@@ -64,13 +89,18 @@ module BindingDumper
 
     private
 
+    # Returns converted mapping of instance variables like
+    #  { instance variable name => instance variable value }
+    #
+    # @return [Hash]
+    #
     def converted_ivars(dumped_ids = [])
       converted = object.instance_variables.map do |ivar_name|
         ivar = object.instance_variable_get(ivar_name)
         conveted_ivar = UniversalDumper.convert(ivar, dumped_ids)
         [ivar_name, conveted_ivar]
       end.reject(&:empty?)
-      Hash[converted] rescue binding.pry
+      Hash[converted]
     end
   end
 end
