@@ -41,7 +41,7 @@ StoredBinding.create(data: binding.dump)
 
 Make your server to execute the code above (just put it to any controller's action), go to the console, and run:
 ``` ruby
-b = Bidning.load(StoredBinding.last.data)
+b = Binding.load(StoredBinding.last.data)
 b.pry
 ```
 
