@@ -47,6 +47,8 @@ b.pry
 
 And enjoy!
 
+[Blog post about internal parts of the gem](https://ilyabylich.svbtle.com/saving-execution-context-for-later-debugging)
+
 ## Requirements
 
 + Ruby >= 1.9.3 (see travis.yml for supported versions)
