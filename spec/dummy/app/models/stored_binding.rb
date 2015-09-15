@@ -1,11 +1,7 @@
 class StoredBinding < ActiveRecord::Base
-  def debug
-    stored_binding.pry
-  end
+  include BindingDumper::LoadSupport::ActiveRecord
 
-  def stored_binding
-    require 'rails/backtrace_cleaner'
-    BindingDumper::UniversalDumper.flush_memories!
-    Binding.load(data)
+  def column_with_binding
+    :data
   end
 end
