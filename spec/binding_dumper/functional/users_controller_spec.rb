@@ -40,20 +40,5 @@ describe UsersController, type: :controller do
         expect(params[:limit]).to eq('10')
       end
     end
-
-    context 'response' do
-      before do
-        User.create(email: 'test@email.com')
-        get :index
-      end
-
-      let(:raw_response) { stored_binding.eval('response') }
-      subject(:response) { JSON.parse(raw_response.body) }
-
-      it 'returns existing users' do
-        expect(response).to be_an(Array)
-        expect(response.length).to eq(1)
-      end
-    end
   end
 end

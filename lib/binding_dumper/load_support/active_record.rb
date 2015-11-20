@@ -4,6 +4,7 @@ module BindingDumper::LoadSupport::ActiveRecord
   end
 
   def stored_binding
+    require 'rails/backtrace_cleaner'
     BindingDumper::UniversalDumper.flush_memories!
     data = read_attribute(column_with_binding)
     Binding.load(data)

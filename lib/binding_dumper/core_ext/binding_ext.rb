@@ -1,3 +1,5 @@
+require 'uri'
+
 # Module with patches for Binding class
 #
 # @example
@@ -45,6 +47,7 @@ module BindingDumper
       #
       def dump(&block)
         dumped = UniversalDumper.dump(data_to_dump)
+        dumped = URI.encode(dumped)
         block.call(dumped) if block_given?
         dumped
       end
@@ -55,7 +58,7 @@ module BindingDumper
         # @return [Binding]
         #
         def load(dumped)
-          undumped = UniversalDumper.load(dumped)
+          undumped = UniversalDumper.load(URI.decode(dumped))
 
           mod = MagicContextPatchBuilder.new(undumped).patch
 
