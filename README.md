@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/iliabylich/binding_dumper.svg?branch=master)](https://travis-ci.org/iliabylich/binding_dumper)
 [![Code Climate](https://codeclimate.com/github/iliabylich/binding_dumper/badges/gpa.svg)](https://codeclimate.com/github/iliabylich/binding_dumper)
+[![Coverage Status](https://coveralls.io/repos/iliabylich/binding_dumper/badge.svg?branch=master&service=github)](https://coveralls.io/github/iliabylich/binding_dumper?branch=master)
 [![Inline docs](http://inch-ci.org/github/iliabylich/binding_dumper.svg?branch=master)](http://inch-ci.org/github/iliabylich/binding_dumper)
 
 A gem for dumping a whole binding and restoring it later. After restoring you can use `pry` to perform delayed debugging.

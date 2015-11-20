@@ -1,3 +1,13 @@
+if ENV['TRAVIS']
+  require 'coveralls'
+  Coveralls.wear!
+else
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter '/spec/support'
+  end
+end
+
 require 'pathname'
 GEM_ROOT = Pathname.new File.expand_path('../..', __FILE__)
 $: << GEM_ROOT.join('lib').to_s

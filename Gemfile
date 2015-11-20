@@ -9,3 +9,4 @@ gem 'pry'
 gem 'rspec-rails'
 gem 'exception_manager'
 gem 'binding_of_caller'
+gem 'coveralls', require: false
