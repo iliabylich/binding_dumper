@@ -4,6 +4,10 @@ module BindingDumper
   # It uses a gem called 'method_source' which may inspect the source of proc/method
   #
   class Dumpers::ProcDumper < Dumpers::Abstract
+    # An alias to passed +abstract_object+
+    #
+    # @return [Proc]
+    #
     alias_method :_proc, :abstract_object
 
     # Returns true if ProcDumper can convert passed +abstract_object+

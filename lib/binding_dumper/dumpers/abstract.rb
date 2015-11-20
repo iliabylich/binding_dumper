@@ -1,6 +1,10 @@
 # Class with common functionality of all dumpers
 #
 class BindingDumper::Dumpers::Abstract
+  # Returns array of object ids that has been already converted
+  #
+  # @return [Array<Fixnum>]
+  #
   attr_reader :dumped_ids
 
   # @param abstract_object [Object] any object

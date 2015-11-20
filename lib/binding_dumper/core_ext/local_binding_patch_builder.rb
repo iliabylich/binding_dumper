@@ -17,8 +17,14 @@
 #   # => 'do_something'
 #
 class BindingDumper::CoreExt::LocalBindingPatchBuilder
+  # Returns +undumped+ object passed to constructor
+  #
+  # @return [Hash]
+  #
   attr_reader :undumped
 
+  # Takes an undumped object representation
+  #
   # @param undumped [Hash]
   #
   def initialize(undumped)

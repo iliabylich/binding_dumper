@@ -32,6 +32,10 @@ module BindingDumper
   #   # => :config
   #
   class Dumpers::MagicDumper < Dumpers::Abstract
+    # An alias to passed +abstract_object+
+    #
+    # @return [Object]
+    #
     alias_method :object, :abstract_object
 
     # Returns true if MagicDumper can convert passed +abstract_object+

@@ -25,8 +25,16 @@
 module BindingDumper
   module CoreExt
     class MagicContextPatchBuilder
+      # Returns +undupmed+ object passed to constructor
+      #
+      # @return [Hash]
+      #
       attr_reader :undumped
 
+      # Takes an undumped object representation
+      #
+      # @param undumped [Hash]
+      #
       def initialize(undumped)
         @undumped = undumped
       end

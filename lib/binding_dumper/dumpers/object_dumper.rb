@@ -9,6 +9,10 @@ module BindingDumper
   #   # => o
   #
   class Dumpers::ObjectDumper < Dumpers::Abstract
+    # An alias to passed +abstract_object+
+    #
+    # @param [Object]
+    #
     alias_method :object, :abstract_object
 
     # Returns true if ObjectDumper can convert passed +abstract_object+

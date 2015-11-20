@@ -8,6 +8,10 @@ module BindingDumper
   #   # => { key: 'value' }
   #
   class Dumpers::HashDumper < Dumpers::Abstract
+    # An alias to passed +abstract_object+
+    #
+    # @return [Hash]
+    #
     alias_method :hash, :abstract_object
 
     # Returns true if HashDumper can convert passed +abstract_object+

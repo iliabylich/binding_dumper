@@ -37,6 +37,10 @@
 module BindingDumper::MagicObjects
   # Builds a tree of objects inside of passed +object+
   #
+  # @param object [Object] object to build a tree from
+  # @param object_path [#to_s] a string that return a passed object after 'eval'-uation
+  # @param result [Hash] accumulator for recursion
+  #
   # @return [Hash]
   #
   def self.magic_tree_from(object, object_path, result = {})

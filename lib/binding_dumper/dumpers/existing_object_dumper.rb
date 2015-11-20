@@ -40,6 +40,10 @@ module BindingDumper
   #   # => true # (they have the same object id)
   #
   class Dumpers::ExistingObjectDumper < Dumpers::Abstract
+    # An alias to passed +abstract_object+
+    #
+    # @return [Hash]
+    #
     alias_method :hash, :abstract_object
 
     # Returns false, this class is only for deconverting

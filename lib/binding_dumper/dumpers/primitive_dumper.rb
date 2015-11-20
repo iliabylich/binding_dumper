@@ -4,6 +4,10 @@ module BindingDumper
   # @see SUPPORTED_CLASSES
   #
   class Dumpers::PrimitiveDumper < Dumpers::Abstract
+    # An alias to passed +abstract_object+
+    #
+    # @return [Object]
+    #
     alias_method :primitive, :abstract_object
 
     SUPPORTED_CLASSES = [

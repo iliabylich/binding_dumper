@@ -9,6 +9,10 @@ module BindingDumper
   #   # => [1,2,3]
   #
   class Dumpers::ArrayDumper < Dumpers::Abstract
+    # An alias to passed +abstract_object+
+    #
+    # @return [Array]
+    #
     alias_method :array, :abstract_object
 
     # Returns true if ArrayDumper can convert +abstract_object+
