@@ -62,7 +62,7 @@ class BindingDumper::Dumpers::Abstract
       copy = object.class.allocate
       Marshal.dump(copy)
       true
-    rescue TypeError, IOError
+    rescue TypeError, IOError, ArgumentError
       false
     end
   end
