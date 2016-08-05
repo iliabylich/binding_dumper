@@ -5,7 +5,7 @@
 # SILENT=true bin/multitest
 #
 
-RUBY_VERSIONS=(2.2.3 2.2.2 2.1.7 2.1.6 2.0.0 ruby-1.9.3-p551)
+RUBY_VERSIONS=(2.2.3 2.2.2 2.1.7 2.1.6 2.0.0)
 RUBY_GEMSET=$(cat .ruby-gemset)
 
 for CURRENT_RUBY_VERSION in "${RUBY_VERSIONS[@]}"
