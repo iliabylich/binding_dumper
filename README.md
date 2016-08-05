@@ -56,7 +56,7 @@ And enjoy!
 
 ## Examples
 
-The simplest one is in the file `test.rb`.
+The simplest one is in the file `examples/simple.rb`.
 
 A bit more complex example with Rails environment is in `spec/dummy/app/controllers/users_controller.rb`
 
