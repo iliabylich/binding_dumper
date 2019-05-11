@@ -9,7 +9,7 @@ class A
 
   def run
     local = "LOCAL"
-    binding.dump { |dumped| $b = dumped }
+    $b = binding.dump
   end
 end
 

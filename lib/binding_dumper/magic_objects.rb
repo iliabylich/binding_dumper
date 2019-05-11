@@ -43,18 +43,30 @@ module BindingDumper::MagicObjects
   #
   # @return [Hash]
   #
-  def self.magic_tree_from(object, object_path, result = {})
-    return if result[object.object_id]
+  def self.grow_magic_tree!(object, object_path, tree = {})
+    return if object.nil?
+    return if tree[object.object_id]
 
-    result[object.object_id] = object_path
+    tree[object.object_id] = object_path
 
     object.instance_variables.each do |ivar_name|
       path = "#{object_path}.instance_variable_get(:#{ivar_name})"
       ivar = object.instance_variable_get(ivar_name)
-      magic_tree_from(ivar, path, result)
+      grow_magic_tree!(ivar, path, tree)
     end
 
-    result
+    case object
+    when Array
+      object.each_with_index do |item, idx|
+        path = "#{object_path}[#{idx}]"
+        grow_magic_tree!(item, path, tree)
+      end
+    when Hash
+      object.each do |key, value|
+        path = "#{object_path}[#{key.inspect}]"
+        grow_magic_tree!(value, path, tree)
+      end
+    end
   end
 
   # Registers passed object as 'magical'
@@ -63,7 +75,8 @@ module BindingDumper::MagicObjects
   # @param object_path [String]  the way how to get an object
   #
   def self.register(object, object_path = object.name)
-    tree = magic_tree_from(object, object_path)
+    tree = {}
+    grow_magic_tree!(object, object_path, tree)
     pool.merge!(tree)
     true
   end
@@ -98,5 +111,13 @@ module BindingDumper::MagicObjects
   #
   def self.flush!
     @pool = {}
+  end
+
+  # @private
+  def self.flush_while
+    dump, @pool = @pool, {}
+    yield
+  ensure
+    @pool = dump
   end
 end

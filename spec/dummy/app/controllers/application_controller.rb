@@ -7,6 +7,10 @@ class ApplicationController < ActionController::Base
 
   def log_binding(e)
     StoredBinding.create(data: e._binding.dump)
-    render json: {}
+    render json: { code: 500 }
+  end
+
+  def local_binding
+    binding
   end
 end

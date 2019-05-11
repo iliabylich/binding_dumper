@@ -4,6 +4,7 @@ class UsersController < ApplicationController
   end
 
   def some_helper_method
+    a = true
     @users = User.all.to_a
     some_proc = proc { 1 + 1 }
     raise 'oh'

@@ -10,12 +10,12 @@ module BindingDumper
   #
   module UniversalDumper
     DUMPERS_ON_CONVERTING = [
+      Dumpers::PrimitiveDumper,
       Dumpers::MagicDumper,
       Dumpers::ProcDumper,
       Dumpers::ClassDumper,
       Dumpers::ArrayDumper,
       Dumpers::HashDumper,
-      Dumpers::PrimitiveDumper,
       Dumpers::ObjectDumper
     ]
 

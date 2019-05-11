@@ -16,6 +16,8 @@ require 'bundler'
 require GEM_ROOT.join('spec/dummy/config/environment')
 require 'rspec/rails'
 
+require GEM_ROOT.join('spec/dummy/db/schema.rb')
+
 Dir[GEM_ROOT.join('spec/fixtures/**/*.rb')].each { |f| require f }
 
 Dir[GEM_ROOT.join('spec/support/**/*.rb')].each { |f| require f }

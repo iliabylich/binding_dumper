@@ -18,17 +18,16 @@ describe UsersController, type: :controller do
   end
 
   context 'dumping local vars' do
-    before { get :index }
-    subject(:local) { stored_binding.eval('some_proc') }
-
     it 'dumps local vars (which can also be procs)' do
+      get :index
+      local = stored_binding.eval('some_proc')
       expect(local.call).to eq(2)
     end
   end
 
   context 'dumping rails-related stuff' do
     context 'params' do
-      before { get :index, limit: 10 }
+      before { get :index, params: { limit: 10 } }
 
       subject(:params) { stored_binding.eval('params') }
 
