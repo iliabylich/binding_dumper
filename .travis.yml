@@ -3,10 +3,6 @@ env:
 before_install: gem install bundler -v 1.10.6
 language: ruby
 rvm:
-  - 2.2.3
-  - 2.2.2
-  - 2.1.7
-  - 2.1.6
-  - 2.0.0
-before_script:
-  - bin/dummy_rake db:create db:migrate
+  - 2.6.3
+  - 2.5.5
+  - 2.4.6
